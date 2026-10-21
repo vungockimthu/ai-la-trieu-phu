@@ -45,7 +45,7 @@
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
         }
 
-        /* Nút Trang chủ */
+        /* Nút Trang chủ nhỏ gọn */
         .btn-home {
             background-color: #ffb6c1;
             color: white;
@@ -105,4 +105,481 @@
             font-size: 1.1rem;
             font-weight: bold;
             color: #b03060;
-            background:
+            background: #ffe4e1;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .question-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: 2px dashed #ffb6c1;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #555;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-btn {
+            background-color: #ffffff;
+            border: 2px solid #ffb6c1;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background-color: #fff0f5;
+            border-color: #ff69b4;
+        }
+
+        /* Trạng thái đáp án đúng/sai */
+        .answer-btn.correct {
+            background-color: #98fb98 !important;
+            border-color: #3cb371 !important;
+            color: #006400 !important;
+        }
+
+        .answer-btn.wrong {
+            background-color: #ffb6c1 !important;
+            border-color: #ff4500 !important;
+            color: #8b0000 !important;
+        }
+
+        /* Màn hình Hộp Quà Chiến Thắng */
+        #gift-screen {
+            display: none;
+        }
+
+        .gift-box {
+            font-size: 6rem;
+            cursor: pointer;
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+            display: inline-block;
+            user-select: none;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-15px) scale(1.1); }
+        }
+
+        /* Hiệu ứng Tiền Bay Vòng Vòng */
+        .flying-money {
+            position: fixed;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff1493;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 2px solid #ff69b4;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+        }
+
+        @keyframes spinAndFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            30% {
+                transform: translate(-100px, -100px) scale(1.5) rotate(360deg);
+            }
+            60% {
+                transform: translate(100px, -150px) scale(1.3) rotate(720deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(var(--target-x), var(--target-y)) scale(0.2) rotate(1080deg);
+            }
+        }
+
+        /* Màn hình Kết thúc */
+        #end-screen {
+            display: none;
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-restart, .btn-main-home {
+            background-color: #ffb6c1;
+            color: white;
+            font-size: 1.1rem;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .btn-restart:hover, .btn-main-home:hover {
+            background-color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="title">Ai Là Triệu Phú</h1>
+
+        <!-- MENU SCREEN -->
+        <div id="menu-screen">
+            <p style="margin-bottom: 10px; font-size: 1.1rem; color: #b03060;">Sẵn sàng chinh phục 20 câu hỏi về phong tục tập quán chưa?</p>
+            <button class="btn-play" onclick="startGame()">CHƠI</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen">
+            <button class="btn-home" onclick="goHome()">🏠 Trang chủ</button>
+            <div class="game-header">
+                <span id="question-counter">Câu 1/20</span>
+                <span id="timer-display">⏱️ 15s</span>
+                <span id="money-display">💰 0 Tiền</span>
+            </div>
+            <div class="question-box" id="question-text">Đang tải câu hỏi...</div>
+            <div class="answers-grid">
+                <button class="answer-btn" id="btn-0" onclick="selectAnswer(0)"></button>
+                <button class="answer-btn" id="btn-1" onclick="selectAnswer(1)"></button>
+                <button class="answer-btn" id="btn-2" onclick="selectAnswer(2)"></button>
+                <button class="answer-btn" id="btn-3" onclick="selectAnswer(3)"></button>
+            </div>
+        </div>
+
+        <!-- GIFT SCREEN -->
+        <div id="gift-screen">
+            <h2 style="color: #d87093;">BẠN ĐÃ THẮNG CẢ 20 CÂU HỎI!</h2>
+            <p style="margin-top: 10px; color: #b03060; font-size: 1.1rem;">Bấm vào hộp quà bên dưới để nhận thưởng 100 tiền nha! 🎁</p>
+            <div class="gift-box" onclick="openGift()">🎁</div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen">
+            <h2 id="end-title" style="color: #d87093; margin-bottom: 15px;">KẾT THÚC TRÒ CHƠI</h2>
+            <p id="end-message" style="font-size: 1.2rem; margin-bottom: 15px;"></p>
+            <div class="btn-action-group">
+                <button class="btn-restart" onclick="resetGame()">Chơi Lại</button>
+                <button class="btn-main-home" onclick="goHome()">🏠 Trang Chủ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Element hiệu ứng tiền bay -->
+    <div id="flying-money-element" class="flying-money">💰 +100 Tiền</div>
+
+    <script>
+        // 20 câu hỏi tổng hợp (5 câu tùy chỉnh theo yêu cầu, đáp án đảo đều A, B, C, D)
+        const questions = [
+            {
+                q: "Câu 1: Phong tục ông bà ngày xưa ăn trầu có tác dụng gì theo y học dân gian?",
+                choices: ["A. Hạ khí, tiêu đờm", "B. Giúp trắng răng", "C. Trị đau mắt", "D. Chữa bách bệnh"],
+                answer: 0 // Đáp án A đúng
+            },
+            {
+                q: "Câu 2: Lần đầu tiên nhà trai sang nhà gái hỏi cưới một người làm vợ gọi là lễ gì?",
+                choices: ["A. Lễ rước dâu", "B. Lễ dạm ngõ", "C. Lễ ăn hỏi", "D. Lễ kết hôn"],
+                answer: 1 // Đáp án B đúng
+            },
+            {
+                q: "Câu 3: Vì sao người Việt lại thắp nhang (hương) khi cúng bái?",
+                choices: ["A. Để xua đuổi ma quỷ", "B. Để người đã khuất thấy đường về", "C. Để bày tỏ lòng thành kính, tưởng nhớ", "D. Để sưởi ấm không gian"],
+                answer: 2 // Đáp án C đúng
+            },
+            {
+                q: "Câu 4: Trang phục truyền thống nào là trang phục phổ biến của phụ nữ Bắc Bộ xưa trong các dịp lễ hội?",
+                choices: ["A. Áo dài cách tân", "B. Áo bà ba", "C. Áo nhật bình", "D. Áo tứ thân"],
+                answer: 3 // Đáp án D đúng
+            },
+            {
+                q: "Câu 5: Phong tục sắp lễ cúng khi em bé tròn 1 tháng tuổi (đầy tháng) được gọi là cúng gì?",
+                choices: ["A. Cúng Mụ (Bà Mụ)", "B. Cúng thầy phong thủy", "C. Cúng thôi nôi", "D. Cúng tổ tiên"],
+                answer: 0 // Đáp án A đúng
+            },
+            {
+                q: "Câu 6: Nghi lễ tổ chức cho em bé tròn 1 tuổi (12 tháng tuổi) trong văn hóa Việt Nam được gọi là gì?",
+                choices: ["A. Lễ đầy tháng", "B. Lễ thôi nôi", "C. Lễ rửa tay", "D. Lễ đặt tên"],
+                answer: 1 // Đáp án B đúng
+            },
+            {
+                q: "Câu 7: Trong giao tiếp truyền thống, người nhỏ tuổi khi chào người lớn tuổi thường có thái độ như thế nào?",
+                choices: ["A. Vẫy tay chào lớn", "B. Bắt tay thật chặt", "C. Đứng khoanh tay và cúi đầu", "D. Nhìn thẳng không chớp mắt"],
+                answer: 2 // Đáp án C đúng
+            },
+            {
+                q: "Câu 8: Lễ cúng tưởng nhớ ngày một người qua đời hàng năm trong gia đình Việt Nam được gọi là gì?",
+                choices: ["A. Ngày hội lớn", "B. Ngày vía thần", "C. Ngày lễ tạ ơn", "D. Ngày giỗ"],
+                answer: 3 // Đáp án D đúng
+            },
+            {
+                q: "Câu 9: Trong nghi thức đám cưới truyền thống, sính lễ chú rể mang sang nhà gái thường được đựng trong vật gì?",
+                choices: ["A. Tráp (Mâm quả) trùm vải đỏ", "B. Vali du lịch", "C. Balo thời trang", "D. Túi ni lông cao cấp"],
+                answer: 0 // Đáp án A đúng
+            },
+            {
+                q: "Câu 10: Ngày mùng 10 tháng 3 âm lịch hàng năm là ngày lễ lớn nào của dân tộc Việt Nam?",
+                choices: ["A. Lễ Phật Đản", "B. Giỗ Tổ Hùng Vương", "C. Tết Hàn Thực", "D. Tết Trung Thu"],
+                answer: 1 // Đáp án B đúng
+            },
+            {
+                q: "Câu 11: Phong tục cúng 'Thành Hoàng Bản Cảnh' (vị thần bảo hộ làng xã) thường diễn ra ở đâu?",
+                choices: ["A. Chợ trung tâm", "B. Bến sông lớn", "C. Đình làng", "D. Gốc cây đa cổ thụ"],
+                answer: 2 // Đáp án C đúng
+            },
+            {
+                q: "Câu 12: Vào ngày mùng 3 tháng 3 âm lịch (Tết Hàn Thực), người dân Việt Nam có phong tục làm món bánh gì?",
+                choices: ["A. Bánh chưng, bánh giầy", "B. Bánh xèo, bánh khọt", "C. Bánh pía, bánh dẻo", "D. Bánh trôi, bánh chay"],
+                answer: 3 // Đáp án D đúng
+            },
+            {
+                q: "Câu 13: Trong tục ngữ dân gian về kinh nghiệm chăn nuôi gia súc xưa có câu: 'Con trâu là ___ cơ nghiệp'?",
+                choices: ["A. Đầu", "B. Giữa", "C. Cuối", "D. Cả"],
+                answer: 0 // Đáp án A đúng
+            },
+            {
+                q: "Câu 14: Lễ hội 'Tịch Điền' thời phong kiến là nghi lễ nhà vua đích thân xuống ruộng làm gì để khuyến khích nông nghiệp?",
+                choices: ["A. Gieo mạ lúa", "B. Cày ruộng", "C. Gặt lúa vàng", "D. Tát nước vào ruộng"],
+                answer: 1 // Đáp án B đúng
+            },
+            {
+                q: "Câu 15: Trong văn hóa tín ngưỡng dân gian Việt Nam, 'Tứ Bất Tử' gồm những vị thánh nào?",
+                choices: ["A. Thần Tài, Thổ Địa, Ông Táo, Lộc Thần", "B. Quan Công, Trạng Trình, Kim Đồng, Thánh Gióng", "C. Tản Viên, Thánh Gióng, Chử Đồng Tử, Mẫu Liễu Hạnh", "D. Ngọc Hoàng, Nam Tào, Bắc Đẩu, Diêm Vương"],
+                answer: 2 // Đáp án C đúng
+            },
+            {
+                q: "Câu 16: Tập quán 'Kết chạ' trong xã hội Việt Nam thời xưa có ý nghĩa gì?",
+                choices: ["A. Hai làng kết nghĩa anh em, gắn kết tình làng nghĩa xóm", "B. Hai gia đình gả con cho nhau từ nhỏ", "C. Thành lập hội buôn bán lớn trên sông", "D. Thi đấu võ thuật giữa các huyện"],
+                answer: 3 // Đáp án D đúng
+            },
+            {
+                q: "Câu 17: Theo phong tục ngày Tết Nguyên Đán, người lớn thường tặng món gì cho trẻ em để chúc may mắn?",
+                choices: ["A. Lì xì mừng tuổi", "B. Bánh chưng xanh", "C. Cành hoa đào", "D. Đĩa dưa hấu"],
+                answer: 0 // Đáp án A đúng
+            },
+            {
+                q: "Câu 18: Phong tục tiễn Táo Quân về trời báo cáo Ngọc Hoàng diễn ra vào ngày nào trong tháng Chạp?",
+                choices: ["A. Ngày 15 tháng Chạp", "B. Ngày 23 tháng Chạp", "C. Ngày 20 tháng Chạp", "D. Ngày 30 tháng Chạp"],
+                answer: 1 // Đáp án B đúng
+            },
+            {
+                q: "Câu 19: Theo dân gian Việt Nam, phương tiện đưa Ông Táo cưỡi về trời là con vật nào?",
+                choices: ["A. Con ngựa hồng", "B. Con trâu vàng", "C. Con cá chép", "D. Con chim sẻ"],
+                answer: 2 // Đáp án C đúng
+            },
+            {
+                q: "Câu 20: Tết Trung Thu (rằm tháng Tám âm lịch) còn được dân gian gọi bằng tên gọi thân thương nào?",
+                choices: ["A. Tết trồng cây", "B. Tết hạ nêu", "C. Tết diệt sâu bọ", "D. Tết Trông Trăng (Tết Đoàn Viên)"],
+                answer: 3 // Đáp án D đúng
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 15;
+        let lockAnswers = false;
+
+        function startGame() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'none';
+            currentQuestionIndex = 0;
+            score = 0;
+            updateMoneyDisplay();
+            loadQuestion();
+        }
+
+        function goHome() {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'flex';
+        }
+
+        function loadQuestion() {
+            lockAnswers = false;
+            clearInterval(timer);
+            timeLeft = 15;
+            document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+
+            if (currentQuestionIndex >= questions.length) {
+                showGiftScreen();
+                return;
+            }
+
+            let qData = questions[currentQuestionIndex];
+            document.getElementById('question-counter').innerText = `Câu ${currentQuestionIndex + 1}/20`;
+            document.getElementById('question-text').innerText = qData.q;
+
+            for (let i = 0; i < 4; i++) {
+                let btn = document.getElementById(`btn-${i}`);
+                btn.innerText = qData.choices[i];
+                btn.className = "answer-btn";
+                btn.disabled = false;
+            }
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function handleTimeOut() {
+            lockAnswers = true;
+            let correctIndex = questions[currentQuestionIndex].answer;
+            document.getElementById(`btn-${correctIndex}`).classList.add('correct');
+            setTimeout(() => {
+                endGame(false, "Hết giờ mất rồi!");
+            }, 1500);
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (lockAnswers) return;
+            lockAnswers = true;
+            clearInterval(timer);
+
+            let correctIndex = questions[currentQuestionIndex].answer;
+            let selectedBtn = document.getElementById(`btn-${selectedIndex}`);
+            let correctBtn = document.getElementById(`btn-${correctIndex}`);
+
+            if (selectedIndex === correctIndex) {
+                selectedBtn.classList.add('correct');
+                score += 20;
+                updateMoneyDisplay();
+
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
+            } else {
+                selectedBtn.classList.add('wrong');
+                correctBtn.classList.add('correct');
+                score -= 20;
+                if (score < 0) score = 0;
+                updateMoneyDisplay();
+
+                setTimeout(() => {
+                    endGame(false, "Bạn đã trả lời sai!");
+                }, 1800);
+            }
+        }
+
+        function updateMoneyDisplay() {
+            document.getElementById('money-display').innerText = `💰 ${score} Tiền`;
+        }
+
+        function showGiftScreen() {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'block';
+
+            confetti({
+                particleCount: 250,
+                spread: 120,
+                origin: { y: 0.5 }
+            });
+        }
+
+        function openGift() {
+            let giftBox = document.querySelector('.gift-box');
+            giftBox.onclick = null;
+            giftBox.innerText = '🔓';
+
+            confetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
+
+            let flyingEl = document.getElementById('flying-money-element');
+            let startX = window.innerWidth / 2 - 80;
+            let startY = window.innerHeight / 2;
+
+            let moneyDisplay = document.getElementById('money-display');
+            let rect = moneyDisplay.getBoundingClientRect();
+            let targetX = rect.left - startX;
+            let targetY = rect.top - startY;
+
+            flyingEl.style.left = `${startX}px`;
+            flyingEl.style.top = `${startY}px`;
+            flyingEl.style.setProperty('--target-x', `${targetX}px`);
+            flyingEl.style.setProperty('--target-y', `${targetY}px`);
+
+            flyingEl.style.animation = 'spinAndFly 2s forwards ease-in-out';
+
+            setTimeout(() => {
+                score += 100; // Thưởng thêm 100 tiền khi mở hộp quà thắng cuộc
+                updateMoneyDisplay();
+                flyingEl.style.animation = 'none';
+
+                setTimeout(() => {
+                    endGame(true);
+                }, 800);
+            }, 2000);
+        }
+
+        function endGame(isWon, message = "") {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'block';
+
+            let endTitle = document.getElementById('end-title');
+            let endMsg = document.getElementById('end-message');
+
+            if (isWon) {
+                endTitle.innerText = "CHÚC MỪNG BẠN ĐÃ THẮNG!";
+                endMsg.innerHTML = `Xuất sắc hoàn thành cả 20 câu hỏi!<br>Đã nhận thưởng thêm 100 tiền thành công 🎉<br>Tổng số tiền của bạn: <b>${score} Tiền</b>`;
+            } else {
+                endTitle.innerText = "TRÒ CHƠI KẾT THÚC";
+                endMsg.innerHTML = `${message}<br>Số tiền bạn nhận được: <b>${score} Tiền</b>`;
+            }
+        }
+
+        function resetGame() {
+            startGame();
+        }
+    </script>
+</body>
+</html>
