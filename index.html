@@ -23,6 +23,7 @@
             justify-content: center;
             min-height: 100vh;
             overflow-x: hidden;
+            position: relative;
         }
 
         .container {
@@ -34,6 +35,7 @@
             box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
             text-align: center;
             border: 3px solid #ffb6c1;
+            position: relative;
         }
 
         h1.title {
@@ -41,6 +43,25 @@
             font-size: 2.2rem;
             margin-bottom: 20px;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Nút Trang chủ */
+        .btn-home {
+            background-color: #ffb6c1;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+
+        .btn-home:hover {
+            background-color: #ff69b4;
         }
 
         /* Màn hình Menu */
@@ -129,17 +150,69 @@
             border-color: #ff69b4;
         }
 
-        /* Trạng thái đáp án đúng/sai */
+        /* Trạng thái đáp án */
         .answer-btn.correct {
-            background-color: #98fb98 !important; /* Xanh lá cây pastel */
+            background-color: #98fb98 !important;
             border-color: #3cb371 !important;
             color: #006400 !important;
         }
 
         .answer-btn.wrong {
-            background-color: #ffb6c1 !important; /* Đỏ/Hồng đậm báo lỗi */
+            background-color: #ffb6c1 !important;
             border-color: #ff4500 !important;
             color: #8b0000 !important;
+        }
+
+        /* Màn hình Hộp Quà Chiến Thắng */
+        #gift-screen {
+            display: none;
+        }
+
+        .gift-box {
+            font-size: 6rem;
+            cursor: pointer;
+            margin: 20px 0;
+            animation: bounce 1s infinite alternate;
+            display: inline-block;
+            user-select: none;
+        }
+
+        @keyframes bounce {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-15px) scale(1.1); }
+        }
+
+        /* Hiệu ứng Tiền Bay Vòng Vòng */
+        .flying-money {
+            position: fixed;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ff1493;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            border: 2px solid #ff69b4;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+        }
+
+        @keyframes spinAndFly {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1) rotate(0deg);
+            }
+            30% {
+                transform: translate(-100px, -100px) scale(1.5) rotate(360deg);
+            }
+            60% {
+                transform: translate(100px, -150px) scale(1.3) rotate(720deg);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(var(--target-x), var(--target-y)) scale(0.2) rotate(1080deg);
+            }
         }
 
         /* Màn hình Kết thúc */
@@ -147,19 +220,26 @@
             display: none;
         }
 
-        .btn-restart {
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn-restart, .btn-main-home {
             background-color: #ffb6c1;
             color: white;
-            font-size: 1.2rem;
-            padding: 10px 30px;
+            font-size: 1.1rem;
+            padding: 10px 20px;
             border: none;
             border-radius: 25px;
             cursor: pointer;
-            margin-top: 20px;
             font-weight: bold;
+            transition: all 0.2s;
         }
 
-        .btn-restart:hover {
+        .btn-restart:hover, .btn-main-home:hover {
             background-color: #ff69b4;
         }
     </style>
@@ -177,10 +257,11 @@
 
         <!-- GAME SCREEN -->
         <div id="game-screen">
+            <button class="btn-home" onclick="goHome()">🏠 Trang chủ</button>
             <div class="game-header">
                 <span id="question-counter">Câu 1/15</span>
                 <span id="timer-display">⏱️ 15s</span>
-                <span id="money-display">💰 0 VNĐ</span>
+                <span id="money-display">💰 0 Tiền</span>
             </div>
             <div class="question-box" id="question-text">Đang tải câu hỏi...</div>
             <div class="answers-grid">
@@ -191,16 +272,29 @@
             </div>
         </div>
 
+        <!-- GIFT SCREEN (Thắng 15 câu) -->
+        <div id="gift-screen">
+            <h2 style="color: #d87093;">BẠN ĐÃ THẮNG CẢ 15 CÂU HỎI!</h2>
+            <p style="margin-top: 10px; color: #b03060; font-size: 1.1rem;">Bấm vào hộp quà bên dưới để nhận thưởng lớn nha! 🎁</p>
+            <div class="gift-box" onclick="openGift()">🎁</div>
+        </div>
+
         <!-- END SCREEN -->
         <div id="end-screen">
             <h2 id="end-title" style="color: #d87093; margin-bottom: 15px;">KẾT THÚC TRÒ CHƠI</h2>
             <p id="end-message" style="font-size: 1.2rem; margin-bottom: 15px;"></p>
-            <button class="btn-restart" onclick="resetGame()">Chơi Lại</button>
+            <div class="btn-action-group">
+                <button class="btn-restart" onclick="resetGame()">Chơi Lại</button>
+                <button class="btn-main-home" onclick="goHome()">🏠 Trang Chủ</button>
+            </div>
         </div>
     </div>
 
+    <!-- Element hiệu ứng tiền bay -->
+    <div id="flying-money-element" class="flying-money">💰 +200 Tiền</div>
+
     <script>
-        // 15 câu hỏi theo chuẩn Ai Là Triệu Phú (Câu 1 cực dễ, các câu sau căng não dần)
+        // 15 câu hỏi chuẩn Ai Là Triệu Phú
         const questions = [
             {
                 q: "Câu 1: Con bò có mấy chân?",
@@ -288,11 +382,20 @@
         function startGame() {
             document.getElementById('menu-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('end-screen').style.display = 'none';
             currentQuestionIndex = 0;
             score = 0;
             updateMoneyDisplay();
             loadQuestion();
+        }
+
+        function goHome() {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'none';
+            document.getElementById('menu-screen').style.display = 'flex';
         }
 
         function loadQuestion() {
@@ -302,7 +405,7 @@
             document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
 
             if (currentQuestionIndex >= questions.length) {
-                endGame(true);
+                showGiftScreen();
                 return;
             }
 
@@ -351,10 +454,10 @@
 
             if (selectedIndex === correctIndex) {
                 selectedBtn.classList.add('correct');
-                score += 20; // Mỗi câu đúng 20 tiền
+                score += 20; // Trả lời đúng cộng 20 tiền
                 updateMoneyDisplay();
 
-                // Hiệu ứng pháo rơi khi trả lời đúng
+                // Pháo hoa mỗi khi trả lời đúng 1 câu
                 confetti({
                     particleCount: 80,
                     spread: 70,
@@ -382,29 +485,78 @@
             document.getElementById('money-display').innerText = `💰 ${score} Tiền`;
         }
 
+        /* Màn hình Hộp Quà Chiến Thắng */
+        function showGiftScreen() {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'block';
+
+            // Pháo hoa rực rỡ khi thắng cả 15 câu
+            confetti({
+                particleCount: 250,
+                spread: 120,
+                origin: { y: 0.5 }
+            });
+        }
+
+        /* Mở Quà và Tiền Bay Vòng Vòng */
+        function openGift() {
+            let giftBox = document.querySelector('.gift-box');
+            giftBox.onclick = null; // Tránh bấm nhiều lần
+            giftBox.innerText = '🔓';
+
+            // Bắn pháo hoa ăn mừng tiếp
+            confetti({
+                particleCount: 150,
+                spread: 90,
+                origin: { y: 0.6 }
+            });
+
+            // Vị trí xuất phát của cục tiền (ở giữa màn hình)
+            let flyingEl = document.getElementById('flying-money-element');
+            let startX = window.innerWidth / 2 - 80;
+            let startY = window.innerHeight / 2;
+
+            // Vị trí đích đến (Ô tiền ở game header)
+            let moneyDisplay = document.getElementById('money-display');
+            let rect = moneyDisplay.getBoundingClientRect();
+            let targetX = rect.left - startX;
+            let targetY = rect.top - startY;
+
+            flyingEl.style.left = `${startX}px`;
+            flyingEl.style.top = `${startY}px`;
+            flyingEl.style.setProperty('--target-x', `${targetX}px`);
+            flyingEl.style.setProperty('--target-y', `${targetY}px`);
+
+            flyingEl.style.animation = 'spinAndFly 2s forwards ease-in-out';
+
+            setTimeout(() => {
+                score += 200; // Cộng 200 tiền vào hũ
+                updateMoneyDisplay();
+                flyingEl.style.animation = 'none';
+
+                // Hiện kết quả thắng sau khi tiền bay vào hũ xong
+                setTimeout(() => {
+                    endGame(true);
+                }, 800);
+            }, 2000);
+        }
+
         function endGame(isWon, message = "") {
             clearInterval(timer);
             document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('gift-screen').style.display = 'none';
             document.getElementById('end-screen').style.display = 'block';
 
             let endTitle = document.getElementById('end-title');
             let endMsg = document.getElementById('end-message');
 
             if (isWon) {
-                score += 200; // Thưởng thêm 200 tiền nếu vượt qua 15 câu
-                updateMoneyDisplay();
-                endTitle.innerText = "CHÚC MỪNG CHIẾN THẮNG!";
-                endMsg.innerHTML = `Bạn đã xuất sắc vượt qua cả 15 câu hỏi!<br>Nhận thêm thưởng 200 tiền.<br>Tổng tiền thưởng: <b>${score} Tiền</b> 🎉`;
-                
-                // Pháo hoa lớn chúc mừng chiến thắng
-                confetti({
-                    particleCount: 200,
-                    spread: 100,
-                    origin: { y: 0.5 }
-                });
+                endTitle.innerText = "CHÚC MỪNG BẠN ĐÃ THẮNG!";
+                endMsg.innerHTML = `Xuất sắc hoàn thành 15 câu hỏi!<br>Đã nhận thưởng 200 tiền thành công 🎉<br>Tổng số tiền của bạn: <b>${score} Tiền</b>`;
             } else {
                 endTitle.innerText = "TRÒ CHƠI KẾT THÚC";
-                endMsg.innerHTML = `${message}<br>Số tiền bạn kiếm được là: <b>${score} Tiền</b>`;
+                endMsg.innerHTML = `${message}<br>Số tiền bạn nhận được: <b>${score} Tiền</b>`;
             }
         }
 
