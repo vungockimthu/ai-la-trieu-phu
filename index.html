@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ai Là Triệu Phú - Hồng Pastel</title>
+    <title>Ai Là Triệu Phú</title>
     <!-- Thêm hiệu ứng pháo hoa Canvas Confetti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
@@ -251,7 +251,7 @@
 
         <!-- MENU SCREEN -->
         <div id="menu-screen">
-            <p style="margin-bottom: 10px; font-size: 1.1rem; color: #b03060;">Sẵn sàng chinh phục 15 câu hỏi để nhận thưởng lớn chưa?</p>
+            <p style="margin-bottom: 10px; font-size: 1.1rem; color: #b03060;">Sẵn sàng chinh phục 15 câu hỏi Phong Tục Truyền Thống Việt Nam chưa?</p>
             <button class="btn-play" onclick="startGame()">CHƠI</button>
         </div>
 
@@ -272,7 +272,7 @@
             </div>
         </div>
 
-        <!-- GIFT SCREEN (Thắng 15 câu) -->
+        <!-- GIFT SCREEN -->
         <div id="gift-screen">
             <h2 style="color: #d87093;">BẠN ĐÃ THẮNG CẢ 15 CÂU HỎI!</h2>
             <p style="margin-top: 10px; color: #b03060; font-size: 1.1rem;">Bấm vào hộp quà bên dưới để nhận thưởng lớn nha! 🎁</p>
@@ -294,82 +294,82 @@
     <div id="flying-money-element" class="flying-money">💰 +200 Tiền</div>
 
     <script>
-        // 15 câu hỏi chuẩn Ai Là Triệu Phú
+        // 15 câu hỏi Phong tục Truyền thống Việt Nam
         const questions = [
             {
-                q: "Câu 1: Con bò có mấy chân?",
-                choices: ["A. 2 chân", "B. 4 chân", "C. 6 chân", "D. 8 chân"],
+                q: "Câu 1: Theo phong tục ngày Tết Nguyên Đán, người lớn thường tặng món gì cho trẻ em để chúc may mắn?",
+                choices: ["A. Bánh chưng", "B. Lì xì mừng tuổi", "C. Cây hoa đào", "D. Dưa hấu"],
                 answer: 1
             },
             {
-                q: "Câu 2: Đâu là tên một loại quả có múi?",
-                choices: ["A. Quả táo", "B. Quả chuối", "C. Quả cam", "D. Quả dưa hấu"],
+                q: "Câu 2: Phong tục tiễn Táo Quân (Ông Táo) về trời báo cáo ngọc hoàng diễn ra vào ngày nào trong tháng Chạp?",
+                choices: ["A. Ngày 15", "B. Ngày 20", "C. Ngày 23", "D. Ngày 30"],
                 answer: 2
             },
             {
-                q: "Câu 3: Thủ đô của Việt Nam là thành phố nào?",
-                choices: ["A. TP. Hồ Chí Minh", "B. Đà Nẵng", "C. Hải Phòng", "D. Hà Nội"],
+                q: "Câu 3: Theo dân gian Việt Nam, phương tiện đưa Ông Táo cưỡi về trời là con vật nào?",
+                choices: ["A. Con Ngựa", "B. Con Trâu", "C. Con Cá chép", "D. Con Chim sẻ"],
+                answer: 2
+            },
+            {
+                q: "Câu 4: Món ăn truyền thống không thể thiếu trên mâm cỗ Tết của người miền Bắc là gì?",
+                choices: ["A. Bánh tét", "B. Bánh chưng", "C. Bánh xèo", "D. Bánh khọt"],
+                answer: 1
+            },
+            {
+                q: "Câu 5: Tết Trung Thu (rằm tháng Tám) còn được dân gian gọi bằng tên gọi nào khác?",
+                choices: ["A. Tết Mới", "B. Tết Trông Trăng (Tết Đoàn Viên)", "C. Tết Hàn Thực", "D. Tết Đoan Ngọ"],
+                answer: 1
+            },
+            {
+                q: "Câu 6: Theo phong tục cổ truyền, 'Mâm ngũ quả' ngày Tết thường biểu tượng cho điều gì?",
+                choices: ["A. 5 yếu tố Ngũ hành (Kim, Mộc, Thủy, Hỏa, Thổ)", "B. 5 mùa trong năm", "C. 5 giác quan", "D. 5 châu lục"],
+                answer: 0
+            },
+            {
+                q: "Câu 7: Tục ngữ Việt Nam có câu: 'Miếng ___ là đầu câu chuyện'?",
+                choices: ["A. Bánh", "B. Trầu", "C. Trà", "D. Cơm"],
+                answer: 1
+            },
+            {
+                q: "Câu 8: Ngày Tết Đoan Ngọ (rằm tháng 5 âm lịch) trong dân gian Việt Nam còn có tên gọi dân dã là gì?",
+                choices: ["A. Tết diệt sâu bọ", "B. Tết cơm mới", "C. Tết thả hoa đăng", "D. Tết hạ nêu"],
+                answer: 0
+            },
+            {
+                q: "Câu 9: Tục lệ 'Xông đất' đầu năm mới nghĩa là gì?",
+                choices: ["A. Dọn dẹp nhà cửa", "B. Người đầu tiên bước vào nhà sau thời khắc giao thừa", "C. Tưới nước cho cây trồng", "D. Mua đất làm nhà"],
+                answer: 1
+            },
+            {
+                q: "Câu 10: Vào ngày Mùng 3 Tết Nguyên Đán, người Việt xưa có phong tục tri ân ai ('Mùng 1 Tết cha, mùng 2 Tết mẹ, mùng 3 Tết ___')?",
+                choices: ["A. Bạn", "B. Thầy", "C. Bác", "D. Ông"],
+                answer: 1
+            },
+            {
+                q: "Câu 11: Trong lễ cưới truyền thống Việt Nam, hai nghi lễ quan trọng nhất bắt buộc phải có là gì?",
+                choices: ["A. Dặm ngõ và Thử áo", "B. Lễ Dạm ngõ (Chạm ngõ) và Lễ Rước dâu", "C. Đặt cọc và Đãi tiệc", "D. Đám hỏi và Đám cưới ở nhà hàng"],
+                answer: 1
+            },
+            {
+                q: "Câu 12: Phong tục cúng 'Thôi nôi' cho trẻ em Việt Nam được thực hiện vào thời điểm nào?",
+                choices: ["A. Trẻ tròn 1 tháng tuổi", "B. Trẻ tròn 100 ngày", "C. Trẻ tròn 1 tuổi (12 tháng)", "D. Trẻ tròn 3 tuổi"],
+                answer: 2
+            },
+            {
+                q: "Câu 13: Cây 'Nêu' ngày Tết được dựng lên trước cửa nhà thời xưa có ý nghĩa chính là gì?",
+                choices: ["A. Để trang trí cho đẹp", "B. Để xua đuổi ma quỷ và xui xẻo", "C. Để làm giàn cho cây leo", "D. Để treo đèn lồng"],
+                answer: 1
+            },
+            {
+                q: "Câu 14: Tục nhuộm răng đen và ăn trầu là nét văn hóa truyền thống cổ xưa của tộc người nào?",
+                choices: ["A. Người Việt (Kinh) cổ", "B. Người Chăm", "C. Người Khmer", "D. Người Hoa"],
+                answer: 0
+            },
+            {
+                q: "Câu 15: Lễ hội 'Gióng' (ở Sóc Sơn và Xuân Đỉnh) tôn vinh vị thánh nào trong 'Tứ bất tử' của tín ngưỡng Việt Nam?",
+                choices: ["A. Tản Viên Sơn Thánh", "B. Chử Đồng Tử", "C. Mẫu Liễu Hạnh", "D. Thánh Gióng (Phù Đổng Thiên Vương)"],
                 answer: 3
-            },
-            {
-                q: "Câu 4: Lịch sử Việt Nam gắn liền với sự tích 'Hòn Vọng Phu' liên quan đến tỉnh nào?",
-                choices: ["A. Lạng Sơn", "B. Nghệ An", "C. Bình Định", "D. Thanh Hóa"],
-                answer: 0
-            },
-            {
-                q: "Câu 5: Trong bảng chữ cái tiếng Việt, chữ cái đứng sau chữ 'H' là gì?",
-                choices: ["A. I", "B. K", "C. G", "D. L"],
-                answer: 0
-            },
-            {
-                q: "Câu 6: Sông nào là con sông dài nhất thế giới?",
-                choices: ["A. Sông Amazon", "B. Sông Nile", "C. Sông Dương Tử", "D. Sông Mekong"],
-                answer: 1
-            },
-            {
-                q: "Câu 7: Hành tinh nào trong hệ Mặt Trời được mệnh danh là 'Hành tinh Đỏ'?",
-                choices: ["A. Sao Kim", "B. Sao Mộc", "C. Sao Hỏa", "D. Sao Thổ"],
-                answer: 2
-            },
-            {
-                q: "Câu 8: Tác phẩm 'Truyện Kiều' của Nguyễn Du được viết bằng thể thơ nào?",
-                choices: ["A. Thơ tự do", "B. Thơ thất ngôn bát cú", "C. Thơ lục bát", "D. Thơ song thất lục bát"],
-                answer: 2
-            },
-            {
-                q: "Câu 9: Ai là người vẽ bức tranh nổi tiếng 'Mona Lisa'?",
-                choices: ["A. Vincent van Gogh", "B. Leonardo da Vinci", "C. Pablo Picasso", "D. Michelangelo"],
-                answer: 1
-            },
-            {
-                q: "Câu 10: Nước nào có diện tích lớn nhất thế giới?",
-                choices: ["A. Trung Quốc", "B. Canada", "C. Hoa Kỳ", "D. Nga"],
-                answer: 3
-            },
-            {
-                q: "Câu 11: Đâu là tên của một nguyên tố hóa học có ký hiệu là 'Au'?",
-                choices: ["A. Bạc", "B. Đồng", "C. Vàng", "D. Nhôm"],
-                answer: 2
-            },
-            {
-                q: "Câu 12: Đỉnh núi cao nhất Việt Nam (Nóc nhà Đông Dương) là đỉnh nào?",
-                choices: ["A. Fansipan", "B. Lảo Thẩn", "C. Bạch Mộc Lương Tử", "D. Pu Si Lung"],
-                answer: 0
-            },
-            {
-                q: "Câu 13: Năm nào đánh dấu sự kiện chiến thắng Điện Biên Phủ 'lừng lẫy năm châu, chấn động địa cầu'?",
-                choices: ["A. 1945", "B. 1954", "C. 1975", "D. 1972"],
-                answer: 1
-            },
-            {
-                q: "Câu 14: Kênh đào Suez nối liền hai vùng biển nào?",
-                choices: ["A. Biển Đỏ và Biển Địa Trung Hải", "B. Biển Đông và Thái Bình Dương", "C. Đại Tây Dương và Ấn Độ Dương", "D. Biển Đen và Biển Caspi"],
-                answer: 0
-            },
-            {
-                q: "Câu 15: Ai là nhà khoa học đề ra Thuyết tương đối rộng và hẹp?",
-                choices: ["A. Isaac Newton", "B. Nikola Tesla", "C. Albert Einstein", "D. Stephen Hawking"],
-                answer: 2
             }
         ];
 
@@ -454,10 +454,9 @@
 
             if (selectedIndex === correctIndex) {
                 selectedBtn.classList.add('correct');
-                score += 20; // Trả lời đúng cộng 20 tiền
+                score += 20;
                 updateMoneyDisplay();
 
-                // Pháo hoa mỗi khi trả lời đúng 1 câu
                 confetti({
                     particleCount: 80,
                     spread: 70,
@@ -471,7 +470,7 @@
             } else {
                 selectedBtn.classList.add('wrong');
                 correctBtn.classList.add('correct');
-                score -= 20; // Trả lời sai trừ 20 tiền
+                score -= 20;
                 if (score < 0) score = 0;
                 updateMoneyDisplay();
 
@@ -485,13 +484,11 @@
             document.getElementById('money-display').innerText = `💰 ${score} Tiền`;
         }
 
-        /* Màn hình Hộp Quà Chiến Thắng */
         function showGiftScreen() {
             clearInterval(timer);
             document.getElementById('game-screen').style.display = 'none';
             document.getElementById('gift-screen').style.display = 'block';
 
-            // Pháo hoa rực rỡ khi thắng cả 15 câu
             confetti({
                 particleCount: 250,
                 spread: 120,
@@ -499,25 +496,21 @@
             });
         }
 
-        /* Mở Quà và Tiền Bay Vòng Vòng */
         function openGift() {
             let giftBox = document.querySelector('.gift-box');
-            giftBox.onclick = null; // Tránh bấm nhiều lần
+            giftBox.onclick = null;
             giftBox.innerText = '🔓';
 
-            // Bắn pháo hoa ăn mừng tiếp
             confetti({
                 particleCount: 150,
                 spread: 90,
                 origin: { y: 0.6 }
             });
 
-            // Vị trí xuất phát của cục tiền (ở giữa màn hình)
             let flyingEl = document.getElementById('flying-money-element');
             let startX = window.innerWidth / 2 - 80;
             let startY = window.innerHeight / 2;
 
-            // Vị trí đích đến (Ô tiền ở game header)
             let moneyDisplay = document.getElementById('money-display');
             let rect = moneyDisplay.getBoundingClientRect();
             let targetX = rect.left - startX;
@@ -531,11 +524,10 @@
             flyingEl.style.animation = 'spinAndFly 2s forwards ease-in-out';
 
             setTimeout(() => {
-                score += 200; // Cộng 200 tiền vào hũ
+                score += 200;
                 updateMoneyDisplay();
                 flyingEl.style.animation = 'none';
 
-                // Hiện kết quả thắng sau khi tiền bay vào hũ xong
                 setTimeout(() => {
                     endGame(true);
                 }, 800);
