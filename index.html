@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ai Là Triệu Phú - Hồng Pastel</title>
+    <!-- Thêm hiệu ứng pháo hoa Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffe4e1; /* Hồng pastel nhẹ nhàng */
+            color: #4a4a4a;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 600px;
+            background: #fff0f5; /* Hồng phấn sáng */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.4);
+            text-align: center;
+            border: 3px solid #ffb6c1;
+        }
+
+        h1.title {
+            color: #d87093;
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        /* Màn hình Menu */
+        #menu-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-play {
+            background-color: #ffb6c1;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: bold;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.3);
+            transition: all 0.2s ease;
+            margin-top: 20px;
+        }
+
+        .btn-play:hover {
+            background-color: #ff69b4;
+            transform: scale(1.05);
+        }
+
+        /* Màn hình Game */
+        #game-screen {
+            display: none;
+            text-align: left;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #b03060;
+            background: #ffe4e1;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+
+        .question-box {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: 2px dashed #ffb6c1;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #555;
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .answer-btn {
+            background-color: #ffffff;
+            border: 2px solid #ffb6c1;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-weight: 500;
+            color: #444;
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background-color: #fff0f5;
+            border-color: #ff69b4;
+        }
+
+        /* Trạng thái đáp án đúng/sai */
+        .answer-btn.correct {
+            background-color: #98fb98 !important; /* Xanh lá cây pastel */
+            border-color: #3cb371 !important;
+            color: #006400 !important;
+        }
+
+        .answer-btn.wrong {
+            background-color: #ffb6c1 !important; /* Đỏ/Hồng đậm báo lỗi */
+            border-color: #ff4500 !important;
+            color: #8b0000 !important;
+        }
+
+        /* Màn hình Kết thúc */
+        #end-screen {
+            display: none;
+        }
+
+        .btn-restart {
+            background-color: #ffb6c1;
+            color: white;
+            font-size: 1.2rem;
+            padding: 10px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        .btn-restart:hover {
+            background-color: #ff69b4;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="title">Ai Là Triệu Phú</h1>
+
+        <!-- MENU SCREEN -->
+        <div id="menu-screen">
+            <p style="margin-bottom: 10px; font-size: 1.1rem; color: #b03060;">Sẵn sàng chinh phục 15 câu hỏi để nhận thưởng lớn chưa?</p>
+            <button class="btn-play" onclick="startGame()">CHƠI</button>
+        </div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen">
+            <div class="game-header">
+                <span id="question-counter">Câu 1/15</span>
+                <span id="timer-display">⏱️ 15s</span>
+                <span id="money-display">💰 0 VNĐ</span>
+            </div>
+            <div class="question-box" id="question-text">Đang tải câu hỏi...</div>
+            <div class="answers-grid">
+                <button class="answer-btn" id="btn-0" onclick="selectAnswer(0)"></button>
+                <button class="answer-btn" id="btn-1" onclick="selectAnswer(1)"></button>
+                <button class="answer-btn" id="btn-2" onclick="selectAnswer(2)"></button>
+                <button class="answer-btn" id="btn-3" onclick="selectAnswer(3)"></button>
+            </div>
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen">
+            <h2 id="end-title" style="color: #d87093; margin-bottom: 15px;">KẾT THÚC TRÒ CHƠI</h2>
+            <p id="end-message" style="font-size: 1.2rem; margin-bottom: 15px;"></p>
+            <button class="btn-restart" onclick="resetGame()">Chơi Lại</button>
+        </div>
+    </div>
+
+    <script>
+        // 15 câu hỏi theo chuẩn Ai Là Triệu Phú (Câu 1 cực dễ, các câu sau căng não dần)
+        const questions = [
+            {
+                q: "Câu 1: Con bò có mấy chân?",
+                choices: ["A. 2 chân", "B. 4 chân", "C. 6 chân", "D. 8 chân"],
+                answer: 1
+            },
+            {
+                q: "Câu 2: Đâu là tên một loại quả có múi?",
+                choices: ["A. Quả táo", "B. Quả chuối", "C. Quả cam", "D. Quả dưa hấu"],
+                answer: 2
+            },
+            {
+                q: "Câu 3: Thủ đô của Việt Nam là thành phố nào?",
+                choices: ["A. TP. Hồ Chí Minh", "B. Đà Nẵng", "C. Hải Phòng", "D. Hà Nội"],
+                answer: 3
+            },
+            {
+                q: "Câu 4: Lịch sử Việt Nam gắn liền với sự tích 'Hòn Vọng Phu' liên quan đến tỉnh nào?",
+                choices: ["A. Lạng Sơn", "B. Nghệ An", "C. Bình Định", "D. Thanh Hóa"],
+                answer: 0
+            },
+            {
+                q: "Câu 5: Trong bảng chữ cái tiếng Việt, chữ cái đứng sau chữ 'H' là gì?",
+                choices: ["A. I", "B. K", "C. G", "D. L"],
+                answer: 0
+            },
+            {
+                q: "Câu 6: Sông nào là con sông dài nhất thế giới?",
+                choices: ["A. Sông Amazon", "B. Sông Nile", "C. Sông Dương Tử", "D. Sông Mekong"],
+                answer: 1
+            },
+            {
+                q: "Câu 7: Hành tinh nào trong hệ Mặt Trời được mệnh danh là 'Hành tinh Đỏ'?",
+                choices: ["A. Sao Kim", "B. Sao Mộc", "C. Sao Hỏa", "D. Sao Thổ"],
+                answer: 2
+            },
+            {
+                q: "Câu 8: Tác phẩm 'Truyện Kiều' của Nguyễn Du được viết bằng thể thơ nào?",
+                choices: ["A. Thơ tự do", "B. Thơ thất ngôn bát cú", "C. Thơ lục bát", "D. Thơ song thất lục bát"],
+                answer: 2
+            },
+            {
+                q: "Câu 9: Ai là người vẽ bức tranh nổi tiếng 'Mona Lisa'?",
+                choices: ["A. Vincent van Gogh", "B. Leonardo da Vinci", "C. Pablo Picasso", "D. Michelangelo"],
+                answer: 1
+            },
+            {
+                q: "Câu 10: Nước nào có diện tích lớn nhất thế giới?",
+                choices: ["A. Trung Quốc", "B. Canada", "C. Hoa Kỳ", "D. Nga"],
+                answer: 3
+            },
+            {
+                q: "Câu 11: Đâu là tên của một nguyên tố hóa học có ký hiệu là 'Au'?",
+                choices: ["A. Bạc", "B. Đồng", "C. Vàng", "D. Nhôm"],
+                answer: 2
+            },
+            {
+                q: "Câu 12: Đỉnh núi cao nhất Việt Nam (Nóc nhà Đông Dương) là đỉnh nào?",
+                choices: ["A. Fansipan", "B. Lảo Thẩn", "C. Bạch Mộc Lương Tử", "D. Pu Si Lung"],
+                answer: 0
+            },
+            {
+                q: "Câu 13: Năm nào đánh dấu sự kiện chiến thắng Điện Biên Phủ 'lừng lẫy năm châu, chấn động địa cầu'?",
+                choices: ["A. 1945", "B. 1954", "C. 1975", "D. 1972"],
+                answer: 1
+            },
+            {
+                q: "Câu 14: Kênh đào Suez nối liền hai vùng biển nào?",
+                choices: ["A. Biển Đỏ và Biển Địa Trung Hải", "B. Biển Đông và Thái Bình Dương", "C. Đại Tây Dương và Ấn Độ Dương", "D. Biển Đen và Biển Caspi"],
+                answer: 0
+            },
+            {
+                q: "Câu 15: Ai là nhà khoa học đề ra Thuyết tương đối rộng và hẹp?",
+                choices: ["A. Isaac Newton", "B. Nikola Tesla", "C. Albert Einstein", "D. Stephen Hawking"],
+                answer: 2
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timer;
+        let timeLeft = 15;
+        let lockAnswers = false;
+
+        function startGame() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('game-screen').style.display = 'block';
+            document.getElementById('end-screen').style.display = 'none';
+            currentQuestionIndex = 0;
+            score = 0;
+            updateMoneyDisplay();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            lockAnswers = false;
+            clearInterval(timer);
+            timeLeft = 15;
+            document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+
+            if (currentQuestionIndex >= questions.length) {
+                endGame(true);
+                return;
+            }
+
+            let qData = questions[currentQuestionIndex];
+            document.getElementById('question-counter').innerText = `Câu ${currentQuestionIndex + 1}/15`;
+            document.getElementById('question-text').innerText = qData.q;
+
+            for (let i = 0; i < 4; i++) {
+                let btn = document.getElementById(`btn-${i}`);
+                btn.innerText = qData.choices[i];
+                btn.className = "answer-btn";
+                btn.disabled = false;
+            }
+
+            startTimer();
+        }
+
+        function startTimer() {
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = `⏱️ ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    handleTimeOut();
+                }
+            }, 1000);
+        }
+
+        function handleTimeOut() {
+            lockAnswers = true;
+            let correctIndex = questions[currentQuestionIndex].answer;
+            document.getElementById(`btn-${correctIndex}`).classList.add('correct');
+            setTimeout(() => {
+                endGame(false, "Hết giờ mất rồi!");
+            }, 1500);
+        }
+
+        function selectAnswer(selectedIndex) {
+            if (lockAnswers) return;
+            lockAnswers = true;
+            clearInterval(timer);
+
+            let correctIndex = questions[currentQuestionIndex].answer;
+            let selectedBtn = document.getElementById(`btn-${selectedIndex}`);
+            let correctBtn = document.getElementById(`btn-${correctIndex}`);
+
+            if (selectedIndex === correctIndex) {
+                selectedBtn.classList.add('correct');
+                score += 20; // Mỗi câu đúng 20 tiền
+                updateMoneyDisplay();
+
+                // Hiệu ứng pháo rơi khi trả lời đúng
+                confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+
+                setTimeout(() => {
+                    currentQuestionIndex++;
+                    loadQuestion();
+                }, 1500);
+            } else {
+                selectedBtn.classList.add('wrong');
+                correctBtn.classList.add('correct');
+                score -= 20; // Trả lời sai trừ 20 tiền
+                if (score < 0) score = 0;
+                updateMoneyDisplay();
+
+                setTimeout(() => {
+                    endGame(false, "Bạn đã trả lời sai!");
+                }, 1800);
+            }
+        }
+
+        function updateMoneyDisplay() {
+            document.getElementById('money-display').innerText = `💰 ${score} Tiền`;
+        }
+
+        function endGame(isWon, message = "") {
+            clearInterval(timer);
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('end-screen').style.display = 'block';
+
+            let endTitle = document.getElementById('end-title');
+            let endMsg = document.getElementById('end-message');
+
+            if (isWon) {
+                score += 200; // Thưởng thêm 200 tiền nếu vượt qua 15 câu
+                updateMoneyDisplay();
+                endTitle.innerText = "CHÚC MỪNG CHIẾN THẮNG!";
+                endMsg.innerHTML = `Bạn đã xuất sắc vượt qua cả 15 câu hỏi!<br>Nhận thêm thưởng 200 tiền.<br>Tổng tiền thưởng: <b>${score} Tiền</b> 🎉`;
+                
+                // Pháo hoa lớn chúc mừng chiến thắng
+                confetti({
+                    particleCount: 200,
+                    spread: 100,
+                    origin: { y: 0.5 }
+                });
+            } else {
+                endTitle.innerText = "TRÒ CHƠI KẾT THÚC";
+                endMsg.innerHTML = `${message}<br>Số tiền bạn kiếm được là: <b>${score} Tiền</b>`;
+            }
+        }
+
+        function resetGame() {
+            startGame();
+        }
+    </script>
+</body>
+</html>
